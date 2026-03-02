@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>💖  Special quiz 💖</title>
+
+<style>
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(135deg, #ff758c, #ff7eb3);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  overflow: hidden;
+  color: white;
+  padding: 15px;
+}
+
+.container {
+  background: rgba(255,255,255,0.15);
+  padding: 25px;
+  border-radius: 20px;
+  backdrop-filter: blur(15px);
+  width: 100%;
+  max-width: 420px;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+h1 { font-size: 22px; margin-bottom: 15px; }
+#question { font-size: 18px; margin-bottom: 15px; }
+
+button {
+  width: 100%;
+  padding: 12px;
+  margin: 6px 0;
+  border-radius: 12px;
+  border: none;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  background: white;
+  color: #ff4b7d;
+  transition: 0.2s ease;
+}
+
+button:hover {
+  background: #ffe3ec;
+  transform: scale(1.03);
+}
+
+#result {
+  margin-top: 15px;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+/* Floating hearts */
+.heart {
+  position: fixed;
+  width: 18px;
+  height: 18px;
+  background: red;
+  transform: rotate(45deg);
+  animation: float linear infinite;
+  opacity: 0.7;
+}
+
+.heart::before,
+.heart::after {
+  content: "";
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  background: red;
+  border-radius: 50%;
+}
+
+.heart::before { top: -9px; left: 0; }
+.heart::after { left: -9px; top: 0; }
+
+@keyframes float {
+  from { transform: translateY(0) rotate(45deg); opacity: 1; }
+  to { transform: translateY(-110vh) rotate(45deg); opacity: 0; }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <!-- Intro Screen -->
+  <div id="intro">
+    <h1>💖 Would you like to go on a date with me? 💖</h1>
+    <button onclick="startQuiz()">Yes 💕</button>
+    <button id="noBtn">No 😢</button>
+  </div>
+
+  <!-- Quiz Screen -->
+  <div id="quizBox" style="display:none;">
+    <h1>💖 Special Quiz 💖</h1>
+    <div id="question"></div>
+    <div id="answers"></div>
+    <div id="result"></div>
+  </div>
+
+</div>
+
+<script>
+
+const quiz = [
+  { question: "1. Би чамд таалагддаг уу? 💕", answers: ["Тийм","Мэдээж","Маш их","Forever"], correct: 0 },
+  { question: "2. Хэрвээ хоёулаа болзвол юу хийх вэ?", answers: ["Caffe date☕","Movie night🎬","Dinner🍴","Museum tour🖼️"], correct: 0 },
+  { question: "3. Миний хамгийн их таалагддаг зан чанар юу вэ?", answers: ["Намайг гэдэг сэтгэл❤️","Хааяа хөлдүү зан гаргаад хөөрхөнтөөд байдаг🥹","Уур хүргээд байдаг бусадаар хөөрхөн2🥰","болзвол мэдэгднэ😚"], correct: 1 },
+  { question: "4. Чиний хайрын хэл юу вэ?", answers: ["Тэврэх","Гар барих","үнсэх","Сэтгэлын үгс"], correct: 1 },
+  { question: "5. Ямар бэлэг авбал баярлах вэ?", answers: ["Шоколад","Ном","Цэцэг","Захидал"], correct: 2 },
+  { question: "6. Сэтгэлын үгээ хэлээрэй ", answers: ["https://www.instagram.com/btgrlxn/"], correct: 0 },
+  { question: "7. Чиний хувьд хамгийн романтик зүйл юу вэ?", answers: ["Хамт кино үзэх","Эрхлүүлэх","Захиа бичих","Амттан авч өгөх"], correct: 2 },
+  { question: "8. Миний үүрдийн Valentine болох уу? 💖", answers: ["Тийм 💕","Мэдээж 💘","Forever ❤️","Always 💞"], correct: 0 }
+];
+
+let current = 0;
+let score = 0;
+
+function startQuiz(){
+  document.getElementById("intro").style.display = "none";
+  document.getElementById("quizBox").style.display = "block";
+  loadQuestion();
+}
+
+function loadQuestion() {
+  const q = quiz[current];
+  document.getElementById("question").innerText = q.question;
+  const answersDiv = document.getElementById("answers");
+  answersDiv.innerHTML = "";
+
+  q.answers.forEach((answer, index) => {
+    const btn = document.createElement("button");
+    btn.innerText = answer;
+    btn.onclick = () => checkAnswer(index);
+    answersDiv.appendChild(btn);
+  });
+}
+
+function checkAnswer(index) {
+  if(index === quiz[current].correct){ score++; }
+  current++;
+
+  if(current < quiz.length){
+    loadQuestion();
+  } else {
+    document.getElementById("question").innerText = "💘 Дууслаа!";
+    document.getElementById("answers").innerHTML = "";
+    document.getElementById("result").innerText =
+      "Таны оноо: " + score + " / " + quiz.length + " 💖";
+  }
+}
+
+/* No button зугтдаг болгох 😈 */
+const noBtn = document.getElementById("noBtn");
+noBtn.addEventListener("mouseover", () => {
+  noBtn.style.position = "absolute";
+  noBtn.style.left = Math.random() * 70 + "%";
+  noBtn.style.top = Math.random() * 70 + "%";
+});
+
+/* Floating hearts */
+function createHeart(){
+  const heart = document.createElement("div");
+  heart.classList.add("heart");
+  heart.style.left = Math.random() * 100 + "vw";
+  heart.style.animationDuration = (Math.random() * 3 + 3) + "s";
+  document.body.appendChild(heart);
+
+  setTimeout(() => { heart.remove(); }, 6000);
+}
+
+setInterval(createHeart, 300);
+
+</script>
+
+</body>
+</html>
